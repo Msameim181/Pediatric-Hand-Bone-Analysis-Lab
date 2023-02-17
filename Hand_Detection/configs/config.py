@@ -1,16 +1,16 @@
-from mmdet.apis import set_random_seed
-from mmdet.datasets.builder import DATASETS
+from datetime import datetime
 
 from mmcv import Config
-from model_downloader import *
-from datetime import datetime
+from mmdet.apis import set_random_seed
+from model_downloader import download_model
+
 start_time = datetime.now()
 run_name = start_time.strftime("%Y%m%d_%H%M%S")
 
 cfg = Config.fromfile('./YOLOX/yoloxs.py')
 
 cfg.dataset_type = 'CocoDataset'
-cfg.data_root = 'hand/'
+cfg.data_root = 'data/hands/'
 classes = ('hand',)
 
 cfg.data.train.dataset.img_prefix=f'{cfg.data_root}/images/'
@@ -25,15 +25,16 @@ cfg.data.test.img_prefix=f'{cfg.data_root}/images/'
 cfg.data.test.classes=classes
 cfg.data.test.ann_file=f'{cfg.data_root}/val.json'
 
+model_url = 'https://download.openmmlab.com/mmdetection/v2.0/yolox/yolox_s_8x8_300e_coco/yolox_s_8x8_300e_coco_20211121_095711-4592a793.pth'
 cfg.load_from = 'yolox_s_8x8_300e_coco_20211121_095711-4592a793.pth'
-cfg.resume_from = 'hand_detect_368/best_bbox_mAP_epoch_100.pth'
-
+download_model(cfg.load_from, model_url)
 
 # Set up working dir to save files and logs.
-
-cfg.max_epochs = 100
+cfg.max_epochs = 300
 cfg.device = "cuda"
 cfg.work_dir = f'./{run_name}'
+# cfg.resume_from = 'hand_detect_368/best_bbox_mAP_epoch_100.pth'
+
 # set log interval
 cfg.log_config.interval = 1
 cfg.log_config.hooks = [
