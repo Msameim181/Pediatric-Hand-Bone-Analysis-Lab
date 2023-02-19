@@ -14,3 +14,6 @@ pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 -f https://download.pyt
 pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu111/torch1.9.0/index.html
 ```
 
+```shell
+docker 
+```
